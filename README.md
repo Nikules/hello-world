@@ -1,2 +1,2 @@
 # hello-world
-Doing the right thing
+Doing the right things
