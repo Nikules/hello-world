@@ -1,4 +1,3 @@
-Now we`ve started.
 -module(project).
 
 
