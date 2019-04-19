@@ -18,7 +18,7 @@ A - B.
 
 
 last1([]) -> [];
-last1([Ans]) -> Ans;
+last1([Answer]) -> Answer;
 last1([H|T]) -> last1(T).
 
 
