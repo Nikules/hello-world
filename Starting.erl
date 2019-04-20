@@ -41,7 +41,7 @@ len([]) 		-> 0;
 len([_]) 		-> 1;
 len(List) 		-> len(List, 0).
 len([], N) 		-> N;
-len([H|T], N) 	-> len(T, N + 1).
+len([H|T], N) 		-> len(T, N + 1).
 
 
 reverse(Numbers) 	-> reverse(Numbers, []).
