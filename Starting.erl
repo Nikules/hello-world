@@ -6,9 +6,10 @@
 -export([last1/1]).
 -export([last2/1]).
 -export([element_at/2]).
+-export([len/1]).
 -export([reverse/1]).
 -export([is_palindrome/1]).
--export([len/1]).
+
 
 
 add(A, B) ->
@@ -32,9 +33,9 @@ last2([H|T]) 			-> last2(T).
 
 element_at([], N) 			-> [];
 element_at([H|T], N) when N >= 0 	->
-if 	N == 1 	-> H;
-	N > 1 	-> element_at(T, N - 1)
-end.
+	if 	N == 1 	-> H;
+		N > 1 	-> element_at(T, N - 1)
+	end.
 
 
 len([]) 		-> 0;
@@ -51,6 +52,6 @@ reverse([H|T], Acc) 	-> reverse(T, [H|Acc]).
 
 is_palindrome(L) 	-> is_palindrome(L, reverse(L)).
 is_palindrome(L, M) 	->
-if L == M -> {true};
-	L =/= M -> {false}
-end.
+	if 	L == M -> {true};
+		L =/= M -> {false}
+	end.
