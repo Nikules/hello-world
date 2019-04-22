@@ -50,8 +50,6 @@ reverse([], Acc) 	-> Acc;
 reverse([H|T], Acc) 	-> reverse(T, [H|Acc]).
 
 
-is_palindrome(L) 	-> is_palindrome(L, reverse(L)).
-is_palindrome(L, M) 	->
-	if 	L == M -> {true};
-		L =/= M -> {false}
-	end.
+is_palindrome(L)	->
+	reverse(L) =:= L.
+
