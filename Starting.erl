@@ -53,3 +53,12 @@ reverse([H|T], Acc) 	-> reverse(T, [H|Acc]).
 is_palindrome(L)	->
 	reverse(L) =:= L.
 
+
+
+compress(List)					-> compress(List, [], []).
+compress([], Acc1, Acc2)			-> reverse(Acc2);
+compress([H|T], Acc1, Acc2) when Acc2 == []	-> compress(T, [H|Acc1], [H|Acc2]);
+compress([H|T], Acc1, Acc2)			->
+	if [H] == Acc1 -> compress(T, [H], Acc2);
+		[H] =/= Acc1 -> compress(T, [H], [H|Acc2])
+	end.
