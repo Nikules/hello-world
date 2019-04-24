@@ -9,6 +9,7 @@
 -export([len/1]).
 -export([reverse/1]).
 -export([is_palindrome/1]).
+-export([compress/1]).
 
 
 
