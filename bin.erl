@@ -86,7 +86,13 @@ decode(Json, Acc, Rez) ->
 adder(Json) -> adder(Json, <<>>, <<>>, <<>>).
 
 adder(<<>>, Key, Val, _Acc) ->
-	{Key, Val};
+    <<El:1/binary, _Rest/binary>> = Val,
+    if
+        El == <<39>> -> {Key, Val};
+        Val == <<"true">> -> {Key, true};
+        Val == <<"false">> -> {Key, false};
+        true -> {Key, list_to_integer(binary_to_list(Val))}
+    end;
 adder(Json, Key, Val, Acc) ->
 	<<El:1/binary, Rest/binary>> = Json,
 	case El of
