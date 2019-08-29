@@ -91,7 +91,7 @@ adder(<<>>, Key, Val, _Acc) ->
         El == <<39>> -> {Key, Val};
         Val == <<"true">> -> {Key, true};
         Val == <<"false">> -> {Key, false};
-        true -> {Key, list_to_integer(binary_to_list(Val))}
+        true -> {Key, binary_to_integer(Val)}
     end;
 adder(Json, Key, Val, Acc) ->
 	<<El:1/binary, Rest/binary>> = Json,
