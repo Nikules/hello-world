@@ -56,10 +56,9 @@ sizeOfBin(<<_El, Rest/binary>>, Size) -> sizeOfBin(Rest, Size + 1).
 
 decode(Json, proplist) -> decode(Json, <<>>, []).
 
-decode(Json, map) -> decode
 decode(<<>>, _Acc, Rez) ->
     lists:reverse(Rez);
-
+%% verify, if Json is nested
 decode(Json, <<>>, []) ->
     <<El1:1/binary, El2:1/binary, Rest/binary>> = Json,
     case El1 == <<123>> of
@@ -68,10 +67,9 @@ decode(Json, <<>>, []) ->
         false ->
             decode(Rest, <<El1/binary, El2/binary>>, [])
     end;
-
+%% cutting Json by comma and send cutted part to add key & value.
 decode(Json, Acc, Rez) ->
 	<<El:1/binary, Rest/binary>> = Json,
-     %%io:format("Acc ~n~p", [Json]),
     case El of
         <<125>> ->
             decode(Rest, <<>>, [adder(<<Acc/binary, El/binary>>)|Rez]);%% }
@@ -79,19 +77,18 @@ decode(Json, Acc, Rez) ->
             decode(cuttjson(Rest), <<>>, [{addkey(Acc), decode(cuttjson(Rest), <<>>, [])}|Rez]);%% {
         <<91>> ->
             decode(cuttlist(Rest), <<>>, [{addkey(Acc), addlist(Rest)}|Rez]);%% [
-		<<44>> ->
+	<<44>> ->
             decode(Rest, <<>>, [adder(<<Acc/binary, El/binary>>)|Rez]);%% ,
         _ ->
             decode(Rest, <<Acc/binary, El/binary>>, Rez)
 	end.
-
+%% adding key & value
 adder(Json) -> adder(Json, <<>>, <<>>, <<>>).
 
 adder(<<>>, Key, Val, _Acc) ->
 	{Key, Val};
 adder(Json, Key, Val, Acc) ->
 	<<El:1/binary, Rest/binary>> = Json,
-     %%io:format("Acc ~n~p", [Key]),
 	case El of
         <<39>> ->
             adder(Rest, Key, Val, Acc);%% ''
@@ -99,7 +96,7 @@ adder(Json, Key, Val, Acc) ->
             adder(Rest, Key, Val, Acc);%% space
         <<91>> ->
             {Key, addlist(Rest)};%% [
-		<<58>> ->
+	<<58>> ->
             adder(Rest, <<Key/binary, Acc/binary>>, <<>>, <<>>);%% :
         <<44>> ->
             adder(Rest, Key, <<Val/binary, Acc/binary>>, <<>>);%% ,
@@ -115,7 +112,6 @@ addlist(<<>>, _Acc, Rez) ->
     lists:reverse(Rez);
 addlist(Json, Acc, Rez) ->
     <<El:1/binary, Rest/binary>> = Json,
-    %%io:format("Acc ~n~p", [Rest]),
     case El of
         <<32>> ->
             addlist(Rest, Acc, Rez);%% space
@@ -132,7 +128,6 @@ addlist(Json, Acc, Rez) ->
     end.
 
 cuttjson(Json) -> <<El:1/binary, Rest/binary>> = Json,
-    %%io:format("Acc ~n~p", [Rest]),
     case El of
         <<125>> ->
             <<_El2:1/binary, Rest2/binary>> = Rest, Rest2;%% }
@@ -141,15 +136,13 @@ cuttjson(Json) -> <<El:1/binary, Rest/binary>> = Json,
     end.
 
 addToJson(Json) -> addToJson(Json, <<>>).
-addToJson(Json, Acc) -> <<El:1/binary, Rest/binary>> = Json,
-    %%io:format("Acc ~n~p", [Acc]),`
+addToJson(Json, Acc) -> <<El:1/binary, Rest/binary>> = Json,`
     case El of
         <<125>> -> <<Acc/binary, El/binary>>;
         _ -> addToJson(Rest, <<Acc/binary, El/binary>>)
     end.
 
 cuttlist(Json) -> <<El:1/binary, Rest/binary>> = Json,
-    %%io:format("Acc ~n~p", [Rest]),
     case El of
         <<93>> ->
             <<_El1:1/binary, Rest1/binary>> = Rest, Rest1;%% ]
@@ -169,5 +162,3 @@ addkey(Json, Acc) -> <<El:1/binary, Rest/binary>> = Json,
 
 json() ->
 _Json = <<"{'key1':'val1', 'key2': 'val2', 'key3': [{'k3':'V3'},'v3', 'v3'], 'key4': {'k5':'v5'},'key5':'val5'}">>.
-
-
