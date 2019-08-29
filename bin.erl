@@ -84,7 +84,7 @@ decode(Json, Acc, Rez) ->
 	end.
 %% adding key & value
 adder(Json) -> adder(Json, <<>>, <<>>, <<>>).
-
+%%types convertation and sending tuple with key & value to add to proplist
 adder(<<>>, Key, Val, _Acc) ->
     <<El:1/binary, _Rest/binary>> = Val,
     if
